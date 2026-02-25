@@ -1,0 +1,369 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}About - {{ profile.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 6rem 2rem 4rem;
+        text-align: center;
+    }
+
+    .about-hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .about-hero p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .about-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+    }
+
+    /* Bio Section */
+    .bio-section {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 4rem;
+        align-items: center;
+        margin-bottom: 4rem;
+        background: white;
+        border-radius: 30px;
+        padding: 3rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .bio-image {
+        position: relative;
+    }
+
+    .bio-image img {
+        width: 100%;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .bio-image .experience-badge {
+        position: absolute;
+        bottom: -20px;
+        right: -20px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .experience-badge .number {
+        font-size: 2rem;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .experience-badge .text {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    .bio-content h2 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 1.5rem;
+    }
+
+    .bio-content h2 span {
+        color: #667eea;
+    }
+
+    .bio-content .lead {
+        font-size: 1.2rem;
+        color: #667eea;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+
+    .bio-content p {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+
+    .bio-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    /* Education Section */
+    .education-section {
+        background: white;
+        border-radius: 30px;
+        padding: 3rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 3rem;
+    }
+
+    .section-header i {
+        font-size: 2rem;
+        color: #667eea;
+        background: linear-gradient(135deg, #667eea20, #764ba220);
+        padding: 1rem;
+        border-radius: 15px;
+    }
+
+    .section-header h2 {
+        font-size: 2rem;
+        color: #333;
+    }
+
+    .education-grid {
+        display: grid;
+        gap: 2rem;
+    }
+
+    .education-card {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 2rem;
+        padding: 2rem;
+        background: #f8f9fa;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .education-card:hover {
+        transform: translateX(10px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    }
+
+    .education-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .education-content h3 {
+        font-size: 1.3rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .education-content .institution {
+        color: #667eea;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .education-content .date {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .education-content .date i {
+        color: #667eea;
+    }
+
+    .education-content .grade {
+        display: inline-block;
+        background: #e0e7ff;
+        color: #667eea;
+        padding: 0.3rem 1rem;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    /* Resume Download */
+    .resume-download {
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+    .btn-download {
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1rem 3rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-download:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-download i {
+        font-size: 1.3rem;
+    }
+
+    @media (max-width: 768px) {
+        .bio-section {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .bio-image {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .education-card {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .education-icon {
+            margin: 0 auto;
+        }
+
+        .about-hero h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="about-hero">
+    <h1>About Me</h1>
+    <p>Get to know the person behind the code</p>
+</section>
+
+<div class="about-container">
+    <!-- Bio Section -->
+    <div class="bio-section">
+        <div class="bio-image">
+            {% if profile.about_image %}
+            <img src="{{ profile.about_image.url }}" alt="{{ profile.name }}">
+            {% else %}
+            <img src="https://via.placeholder.com/400x500" alt="{{ profile.name }}">
+            {% endif %}
+            <div class="experience-badge">
+                <span class="number">5+</span>
+                <span class="text">Years Experience</span>
+            </div>
+        </div>
+        <div class="bio-content">
+            <h2>Hi, I'm <span>{{ profile.name|default:"Your Name" }}</span></h2>
+            <div class="lead">{{ profile.title|default:"Full Stack Developer" }}</div>
+            <p>{{ profile.bio|default:"I'm a passionate developer with a love for creating beautiful and functional web applications. My journey in tech started several years ago, and since then, I've had the opportunity to work on various exciting projects." }}</p>
+            
+            
+            <div class="bio-stats">
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_projects|default:"50" }}+</div>
+                    <div class="stat-label">Projects Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_certificates|default:"20" }}+</div>
+                    <div class="stat-label">Certifications</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5+</div>
+                    <div class="stat-label">Years Experience</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Education Section -->
+    <div class="education-section">
+        <div class="section-header">
+            <i class="fas fa-graduation-cap"></i>
+            <h2>Education</h2>
+        </div>
+
+        <div class="education-grid">
+            {% for edu in educations %}
+            <div class="education-card">
+                <div class="education-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <div class="education-content">
+                    <h3>{{ edu.get_degree_display }} in {{ edu.field_of_study }}</h3>
+                    <div class="institution">{{ edu.institution }}</div>
+                    <div class="date">
+                        <i class="far fa-calendar-alt"></i>
+                        {{ edu.start_date|date:"Y" }} - 
+                        {% if edu.current %}Present{% else %}{{ edu.end_date|date:"Y" }}{% endif %}
+                    </div>
+                    {% if edu.grade %}
+                    <span class="grade"><i class="fas fa-star"></i> {{ edu.grade }}</span>
+                    {% endif %}
+                    {% if edu.description %}
+                    <p style="margin-top: 1rem; color: #666;">{{ edu.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <p style="text-align: center;">No education added yet.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Resume Download Button -->
+        {% if profile.resume_file %}
+        <div class="resume-download">
+            <a href="{{ profile.resume_file.url }}" class="btn-download" download>
+                <i class="fas fa-file-pdf"></i>
+                Download Resume
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

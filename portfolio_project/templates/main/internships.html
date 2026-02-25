@@ -1,0 +1,235 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Internships - Portfolio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .internships-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+    .internships-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .internships-header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    .internships-timeline {
+        max-width: 900px;
+        margin: 4rem auto;
+        padding: 0 2rem;
+        position: relative;
+    }
+
+    .internships-timeline::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 2px;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 4rem;
+    }
+
+    .timeline-dot {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 24px;
+        background: white;
+        border: 4px solid #667eea;
+        border-radius: 50%;
+        z-index: 1;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    }
+
+    .timeline-content {
+        width: calc(50% - 4rem);
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .timeline-content:hover {
+        transform: scale(1.02);
+        box-shadow: 0 30px 60px rgba(102, 126, 234, 0.3);
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content {
+        margin-left: auto;
+    }
+
+    .timeline-content .company-logo {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+    }
+
+    .timeline-content .company-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .timeline-content h3 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 0.3rem;
+    }
+
+    .timeline-content .position {
+        color: #667eea;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .timeline-content .date {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 0.3rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .timeline-content .description {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+
+    .timeline-content .achievements {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin: 1rem 0;
+    }
+
+    .timeline-content .achievements h4 {
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .timeline-content .achievements ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .timeline-content .achievements li {
+        color: #666;
+        margin-bottom: 0.5rem;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .timeline-content .achievements li::before {
+        content: '▹';
+        position: absolute;
+        left: 0;
+        color: #667eea;
+    }
+
+    .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .tech-tag {
+        background: #f0f0f0;
+        color: #667eea;
+        padding: 0.3rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .internships-timeline::before {
+            left: 20px;
+        }
+
+        .timeline-dot {
+            left: 20px;
+        }
+
+        .timeline-content {
+            width: calc(100% - 3rem);
+            margin-left: 3rem !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="internships-header">
+    <h1>Internship Experience</h1>
+    <p>My professional journey and growth</p>
+</div>
+
+<div class="internships-timeline">
+    {% for internship in internships %}
+    <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+            {% if internship.company_logo %}
+            <div class="company-logo">
+                <img src="{{ internship.company_logo.url }}" alt="{{ internship.company }}">
+            </div>
+            {% endif %}
+            <h3>{{ internship.company }}</h3>
+            <div class="position">{{ internship.position }}</div>
+            <div class="date">
+                {{ internship.start_date|date:"M Y" }} - 
+                {% if internship.current %}Present{% else %}{{ internship.end_date|date:"M Y" }}{% endif %}
+            </div>
+            <p class="description">{{ internship.description }}</p>
+            
+            {% if internship.achievements %}
+            <div class="achievements">
+                <h4>Key Achievements:</h4>
+                <ul>
+                    {% for achievement in internship.achievements.splitlines %}
+                    <li>{{ achievement }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if internship.technologies %}
+            <div class="tech-stack">
+                {% for tech in internship.technologies.split %}
+                <span class="tech-tag">{{ tech }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <p style="text-align: center; padding: 4rem;">No internships added yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

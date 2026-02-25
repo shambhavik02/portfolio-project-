@@ -1,0 +1,277 @@
+{% extends 'admin_dashboard/base_admin.html' %}
+
+{% block title %}Internships - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .header h1 i {
+        color: #667eea;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-add:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .internships-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .internship-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .internship-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+    }
+
+    .internship-header {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1.5rem;
+        position: relative;
+    }
+
+    .company-logo {
+        width: 60px;
+        height: 60px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+    }
+
+    .company-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .internship-header h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .internship-header .position {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .current-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    .internship-content {
+        padding: 1.5rem;
+    }
+
+    .date {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #667eea;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .description {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .tech-tag {
+        background: #f0f0f0;
+        color: #667eea;
+        padding: 0.2rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .btn-edit, .btn-delete {
+        flex: 1;
+        padding: 0.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        text-align: center;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+    }
+
+    .btn-edit {
+        background: #e0e7ff;
+        color: #667eea;
+    }
+
+    .btn-edit:hover {
+        background: #667eea;
+        color: white;
+    }
+
+    .btn-delete {
+        background: #fee2e2;
+        color: #ef4444;
+    }
+
+    .btn-delete:hover {
+        background: #ef4444;
+        color: white;
+    }
+
+    .empty-message {
+        grid-column: 1/-1;
+        text-align: center;
+        padding: 4rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .empty-message i {
+        font-size: 4rem;
+        color: #667eea;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .header {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .internships-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1><i class="fas fa-briefcase"></i> Internships Management</h1>
+    <a href="{% url 'internship_add' %}" class="btn-add">
+        <i class="fas fa-plus"></i> Add New Internship
+    </a>
+</div>
+
+<div class="internships-grid">
+    {% for internship in internships %}
+    <div class="internship-card">
+        <div class="internship-header">
+            {% if internship.company_logo %}
+            <div class="company-logo">
+                <img src="{{ internship.company_logo.url }}" alt="{{ internship.company }}">
+            </div>
+            {% endif %}
+            <h3>{{ internship.company }}</h3>
+            <div class="position">{{ internship.position }}</div>
+            {% if internship.current %}
+            <span class="current-badge">Current</span>
+            {% endif %}
+        </div>
+        <div class="internship-content">
+            <div class="date">
+                <i class="far fa-calendar-alt"></i>
+                {{ internship.start_date|date:"M Y" }} - 
+                {% if internship.current %}Present{% else %}{{ internship.end_date|date:"M Y" }}{% endif %}
+            </div>
+            <p class="description">{{ internship.description|truncatechars:120 }}</p>
+            
+            {% if internship.technologies %}
+            <div class="tech-stack">
+                {% for tech in internship.technologies.split|slice:":5" %}
+                <span class="tech-tag">{{ tech }}</span>
+                {% endfor %}
+                {% if internship.technologies.split|length > 5 %}
+                <span class="tech-tag">+{{ internship.technologies.split|length|add:"-5" }}</span>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <div class="card-actions">
+                <a href="{% url 'internship_edit' internship.id %}" class="btn-edit">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'internship_delete' internship.id %}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this internship?')">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-message">
+        <i class="fas fa-briefcase"></i>
+        <h2>No Internships Yet</h2>
+        <p>Click the "Add New Internship" button to add your first internship experience.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

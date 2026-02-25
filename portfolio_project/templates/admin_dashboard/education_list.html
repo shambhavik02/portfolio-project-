@@ -1,0 +1,304 @@
+{% extends 'admin_dashboard/base_admin.html' %}
+
+{% block title %}Education - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .header h1 i {
+        color: #667eea;
+    }
+
+    .btn-add {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-add:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .education-timeline {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .education-timeline::before {
+        content: '';
+        position: absolute;
+        left: 20px;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 2px;
+    }
+
+    .education-item {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-left: 60px;
+        animation: slideRight 0.5s ease;
+    }
+
+    @keyframes slideRight {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .education-dot {
+        position: absolute;
+        left: 11px;
+        top: 20px;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border: 4px solid #667eea;
+        border-radius: 50%;
+        z-index: 1;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    .education-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .education-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+    }
+
+    .education-header {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .institution-logo {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .institution-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .education-title h3 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 0.2rem;
+    }
+
+    .education-title .institution {
+        color: #667eea;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .education-date {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .current-badge {
+        display: inline-block;
+        background: #e0e7ff;
+        color: #667eea;
+        padding: 0.2rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        margin-left: 0.5rem;
+    }
+
+    .education-grade {
+        background: #f0f0f0;
+        color: #666;
+        padding: 0.3rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+
+    .education-description {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .btn-edit, .btn-delete {
+        flex: 1;
+        padding: 0.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        text-align: center;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+    }
+
+    .btn-edit {
+        background: #e0e7ff;
+        color: #667eea;
+    }
+
+    .btn-edit:hover {
+        background: #667eea;
+        color: white;
+    }
+
+    .btn-delete {
+        background: #fee2e2;
+        color: #ef4444;
+    }
+
+    .btn-delete:hover {
+        background: #ef4444;
+        color: white;
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 4rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .empty-message i {
+        font-size: 4rem;
+        color: #667eea;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .header {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .education-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .education-title {
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1><i class="fas fa-graduation-cap"></i> Education Management</h1>
+    <a href="{% url 'education_add' %}" class="btn-add">
+        <i class="fas fa-plus"></i> Add New Education
+    </a>
+</div>
+
+<div class="education-timeline">
+    {% for edu in educations %}
+    <div class="education-item">
+        <div class="education-dot"></div>
+        <div class="education-card">
+            <div class="education-header">
+                {% if edu.institution_logo %}
+                <div class="institution-logo">
+                    <img src="{{ edu.institution_logo.url }}" alt="{{ edu.institution }}">
+                </div>
+                {% endif %}
+                <div class="education-title">
+                    <h3>{{ edu.get_degree_display }} in {{ edu.field_of_study }}</h3>
+                    <div class="institution">{{ edu.institution }}</div>
+                </div>
+            </div>
+
+            <div class="education-date">
+                <i class="far fa-calendar-alt"></i>
+                {{ edu.start_date|date:"Y" }} - 
+                {% if edu.current %}Present{% else %}{{ edu.end_date|date:"Y" }}{% endif %}
+                {% if edu.current %}
+                <span class="current-badge">Current</span>
+                {% endif %}
+            </div>
+
+            {% if edu.grade %}
+            <div class="education-grade">
+                <i class="fas fa-star"></i> {{ edu.grade }}
+            </div>
+            {% endif %}
+
+            {% if edu.description %}
+            <p class="education-description">{{ edu.description|truncatechars:150 }}</p>
+            {% endif %}
+
+            <div class="card-actions">
+                <a href="{% url 'education_edit' edu.id %}" class="btn-edit">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'education_delete' edu.id %}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this education entry?')">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-message">
+        <i class="fas fa-graduation-cap"></i>
+        <h2>No Education Added Yet</h2>
+        <p>Click the "Add New Education" button to add your educational background.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

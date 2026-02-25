@@ -1,0 +1,273 @@
+{% extends 'admin_dashboard/base_admin.html' %}
+
+{% block title %}Edit Certificate - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-title {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-title i {
+        color: #667eea;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .file-input-group {
+        border: 2px dashed #e5e7eb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .file-input-group:hover {
+        border-color: #667eea;
+        background: #f8f9fa;
+    }
+
+    .file-input-group input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .file-label {
+        color: #667eea;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .file-label i {
+        font-size: 2rem;
+    }
+
+    .file-name {
+        margin-top: 0.5rem;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .current-image {
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    .current-image img {
+        max-width: 200px;
+        max-height: 150px;
+        border-radius: 8px;
+        border: 2px solid #e5e7eb;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .btn {
+        padding: 0.8rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+        background: #e5e7eb;
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background: #d1d5db;
+    }
+
+    .btn-danger {
+        background: #ef4444;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #dc2626;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1 class="form-title">
+        <i class="fas fa-edit"></i>
+        Edit Certificate
+    </h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="name">Certificate Name *</label>
+            <input type="text" id="name" name="name" class="form-control" value="{{ certificate.name }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="issuing_organization">Issuing Organization *</label>
+            <input type="text" id="issuing_organization" name="issuing_organization" class="form-control" value="{{ certificate.issuing_organization }}" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="issue_date">Issue Date *</label>
+                <input type="date" id="issue_date" name="issue_date" class="form-control" value="{{ certificate.issue_date|date:'Y-m-d' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="order">Display Order</label>
+                <input type="number" id="order" name="order" class="form-control" value="{{ certificate.order }}" min="0">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="credential_id">Credential ID</label>
+            <input type="text" id="credential_id" name="credential_id" class="form-control" value="{{ certificate.credential_id }}">
+        </div>
+
+        <div class="form-group">
+            <label for="credential_url">Credential URL</label>
+            <input type="url" id="credential_url" name="credential_url" class="form-control" value="{{ certificate.credential_url }}" placeholder="https://">
+        </div>
+
+        <div class="form-group">
+            <label>Certificate Image</label>
+            <div class="file-input-group">
+                <input type="file" id="certificate_image" name="certificate_image" accept="image/*" onchange="updateFileName(this, 'image-file-name')">
+                <div class="file-label">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Click to upload new certificate image</span>
+                </div>
+                <div id="image-file-name" class="file-name">No file chosen</div>
+            </div>
+            {% if certificate.certificate_image %}
+            <div class="current-image">
+                <p>Current image:</p>
+                <img src="{{ certificate.certificate_image.url }}" alt="{{ certificate.name }}">
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Update Certificate
+            </button>
+            <a href="{% url 'certificates_list' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+            <a href="{% url 'certificate_delete' certificate.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this certificate?')">
+                <i class="fas fa-trash"></i> Delete
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function updateFileName(input, spanId) {
+        const span = document.getElementById(spanId);
+        if (input.files.length > 0) {
+            span.textContent = input.files[0].name;
+        } else {
+            span.textContent = 'No file chosen';
+        }
+    }
+</script>
+{% endblock %}

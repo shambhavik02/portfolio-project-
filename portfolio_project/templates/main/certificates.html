@@ -1,0 +1,184 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Certificates - Portfolio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .certificates-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+    .certificates-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .certificates-header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    .certificates-grid {
+        max-width: 1200px;
+        margin: 4rem auto;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .certificate-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .certificate-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 30px 60px rgba(102, 126, 234, 0.3);
+    }
+
+    .certificate-image {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .certificate-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .certificate-card:hover .certificate-image img {
+        transform: scale(1.1);
+    }
+
+    .certificate-content {
+        padding: 1.5rem;
+    }
+
+    .certificate-content h3 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+
+    .certificate-issuer {
+        color: #667eea;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .certificate-date {
+        color: #999;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .certificate-date i {
+        color: #667eea;
+    }
+
+    .certificate-id {
+        background: #f0f0f0;
+        color: #666;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+
+    .certificate-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .certificate-link:hover {
+        gap: 1rem;
+        color: #764ba2;
+    }
+
+    .no-certificates {
+        text-align: center;
+        padding: 4rem;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        grid-column: 1/-1;
+    }
+
+    .no-certificates i {
+        font-size: 4rem;
+        color: #667eea;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .certificates-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="certificates-header">
+    <h1>My Certifications</h1>
+    <p>Continuous learning and professional development</p>
+</div>
+
+<div class="certificates-grid">
+    {% for cert in certificates %}
+    <div class="certificate-card">
+        <div class="certificate-image">
+            {% if cert.certificate_image %}
+            <img src="{{ cert.certificate_image.url }}" alt="{{ cert.name }}">
+            {% else %}
+            <img src="https://via.placeholder.com/300x180" alt="{{ cert.name }}">
+            {% endif %}
+        </div>
+        <div class="certificate-content">
+            <h3>{{ cert.name }}</h3>
+            <div class="certificate-issuer">{{ cert.issuing_organization }}</div>
+            <div class="certificate-date">
+                <i class="far fa-calendar-alt"></i>
+                Issued: {{ cert.issue_date|date:"F Y" }}
+            </div>
+            {% if cert.credential_id %}
+            <div class="certificate-id">ID: {{ cert.credential_id }}</div>
+            {% endif %}
+            {% if cert.credential_url %}
+            <a href="{{ cert.credential_url }}" target="_blank" class="certificate-link">
+                View Certificate <i class="fas fa-arrow-right"></i>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="no-certificates">
+        <i class="fas fa-certificate"></i>
+        <h2>No Certificates Yet</h2>
+        <p>Certificates will be displayed here once added.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

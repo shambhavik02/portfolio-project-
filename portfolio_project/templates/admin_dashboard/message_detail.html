@@ -1,0 +1,297 @@
+{% extends 'admin_dashboard/base_admin.html' %}
+
+{% block title %}Message Details - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .message-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+        transform: translateX(-5px);
+    }
+
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .message-header h1 {
+        font-size: 1.5rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .message-header h1 i {
+        color: #667eea;
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .status-badge.read {
+        background: #e0e7ff;
+        color: #667eea;
+    }
+
+    .status-badge.unread {
+        background: #fee2e2;
+        color: #ef4444;
+    }
+
+    .message-info {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #667eea;
+        font-size: 1.2rem;
+    }
+
+    .info-content h4 {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.2rem;
+    }
+
+    .info-content p {
+        color: #333;
+        font-weight: 500;
+    }
+
+    .info-content a {
+        color: #667eea;
+        text-decoration: none;
+    }
+
+    .info-content a:hover {
+        text-decoration: underline;
+    }
+
+    .message-body {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .message-body h3 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .message-body h3 i {
+        color: #667eea;
+    }
+
+    .message-body .message-content {
+        color: #444;
+        line-height: 1.8;
+        white-space: pre-wrap;
+    }
+
+    .message-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .btn {
+        padding: 0.8rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-danger {
+        background: #ef4444;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #dc2626;
+    }
+
+    .btn-secondary {
+        background: #e5e7eb;
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background: #d1d5db;
+    }
+
+    @media (max-width: 768px) {
+        .message-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .message-info {
+            grid-template-columns: 1fr;
+        }
+
+        .message-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'messages_list' %}" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Messages
+</a>
+
+<div class="message-container">
+    <div class="message-header">
+        <h1>
+            <i class="fas fa-envelope"></i>
+            Message Details
+        </h1>
+        <span class="status-badge {% if message.is_read %}read{% else %}unread{% endif %}">
+            {% if message.is_read %}Read{% else %}Unread{% endif %}
+        </span>
+    </div>
+
+    <div class="message-info">
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="info-content">
+                <h4>Name</h4>
+                <p>{{ message.name }}</p>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="info-content">
+                <h4>Email</h4>
+                <p><a href="mailto:{{ message.email }}">{{ message.email }}</a></p>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-tag"></i>
+            </div>
+            <div class="info-content">
+                <h4>Subject</h4>
+                <p>{{ message.subject }}</p>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-calendar"></i>
+            </div>
+            <div class="info-content">
+                <h4>Received</h4>
+                <p>{{ message.timestamp|date:"F d, Y \a\t h:i A" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="message-body">
+        <h3><i class="fas fa-comment"></i> Message</h3>
+        <div class="message-content">
+            {{ message.message|linebreaks }}
+        </div>
+    </div>
+
+    <div class="message-actions">
+        <a href="mailto:{{ message.email }}?subject=Re: {{ message.subject }}" class="btn btn-primary">
+            <i class="fas fa-reply"></i> Reply via Email
+        </a>
+        <a href="{% url 'messages_list' %}" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Close
+        </a>
+        <a href="{% url 'message_delete' message.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this message?')">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+    </div>
+</div>
+{% endblock %}

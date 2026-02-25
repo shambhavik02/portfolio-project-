@@ -1,0 +1,350 @@
+{% extends 'admin_dashboard/base_admin.html' %}
+
+{% block title %}Edit Profile - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-form {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-title {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-title i {
+        color: #667eea;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group.full-width {
+        grid-column: span 2;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .file-input-group {
+        border: 2px dashed #e5e7eb;
+        padding: 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .file-input-group:hover {
+        border-color: #667eea;
+        background: #f8f9fa;
+    }
+
+    .file-input-group input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .file-label {
+        color: #667eea;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .file-label i {
+        font-size: 2rem;
+    }
+
+    .file-name {
+        margin-top: 0.5rem;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .preview-image {
+        max-width: 200px;
+        max-height: 200px;
+        margin-top: 1rem;
+        border-radius: 8px;
+        border: 2px solid #e5e7eb;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .btn {
+        padding: 0.8rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+        background: #e5e7eb;
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background: #d1d5db;
+    }
+
+    @media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full-width {
+            grid-column: span 1;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-form">
+    <h1 class="form-title">
+        <i class="fas fa-user-edit"></i>
+        Edit Profile
+    </h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{ profile.name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="title">Professional Title *</label>
+                <input type="text" id="title" name="title" class="form-control" value="{{ profile.title }}" required>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="bio">Bio *</label>
+                <textarea id="bio" name="bio" class="form-control" required>{{ profile.bio }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" class="form-control" value="{{ profile.email }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="phone" class="form-control" value="{{ profile.phone }}">
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" class="form-control" value="{{ profile.location }}">
+            </div>
+
+            <div class="form-group">
+                <label for="github">GitHub URL</label>
+                <input type="url" id="github" name="github" class="form-control" value="{{ profile.github }}">
+            </div>
+
+            <div class="form-group">
+                <label for="linkedin">LinkedIn URL</label>
+                <input type="url" id="linkedin" name="linkedin" class="form-control" value="{{ profile.linkedin }}">
+            </div>
+
+            <div class="form-group">
+                <label for="twitter">Twitter URL</label>
+                <input type="url" id="twitter" name="twitter" class="form-control" value="{{ profile.twitter }}">
+            </div>
+
+            <div class="form-group">
+                <label for="instagram">Instagram URL</label>
+                <input type="url" id="instagram" name="instagram" class="form-control" value="{{ profile.instagram }}">
+            </div>
+
+            <!-- Profile Image -->
+            <div class="form-group">
+                <label>Profile Image</label>
+                <div class="file-input-group">
+                    <input type="file" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(this, 'profile-preview')">
+                    <div class="file-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Click to upload profile image</span>
+                    </div>
+                    <div id="profile-file-name" class="file-name">
+                        {% if profile.profile_image %}Current: {{ profile.profile_image.name }}{% endif %}
+                    </div>
+                    {% if profile.profile_image %}
+                    <img id="profile-preview" src="{{ profile.profile_image.url }}" class="preview-image" alt="Profile Preview">
+                    {% else %}
+                    <img id="profile-preview" class="preview-image" style="display: none;">
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- About Image -->
+            <div class="form-group">
+                <label>About Page Image</label>
+                <div class="file-input-group">
+                    <input type="file" id="about_image" name="about_image" accept="image/*" onchange="previewImage(this, 'about-preview')">
+                    <div class="file-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Click to upload about image</span>
+                    </div>
+                    <div id="about-file-name" class="file-name">
+                        {% if profile.about_image %}Current: {{ profile.about_image.name }}{% endif %}
+                    </div>
+                    {% if profile.about_image %}
+                    <img id="about-preview" src="{{ profile.about_image.url }}" class="preview-image" alt="About Preview">
+                    {% else %}
+                    <img id="about-preview" class="preview-image" style="display: none;">
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Resume File -->
+            <div class="form-group full-width">
+                <label>Resume (PDF)</label>
+                <div class="file-input-group">
+                    <input type="file" id="resume_file" name="resume_file" accept=".pdf" onchange="updateFileName(this, 'resume-file-name')">
+                    <div class="file-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Click to upload resume (PDF only)</span>
+                    </div>
+                    <div id="resume-file-name" class="file-name">
+                        {% if profile.resume_file %}Current: {{ profile.resume_file.name }}{% endif %}
+                    </div>
+                    {% if profile.resume_file %}
+                    <div style="margin-top: 1rem;">
+                        <a href="{{ profile.resume_file.url }}" target="_blank" style="color: #667eea;">
+                            <i class="fas fa-file-pdf"></i> View Current Resume
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function previewImage(input, previewId) {
+        const preview = document.getElementById(previewId);
+        const fileName = document.getElementById(input.id + '-file-name') || document.getElementById('profile-file-name');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+            
+            if (fileName) {
+                fileName.textContent = 'Selected: ' + input.files[0].name;
+            }
+        }
+    }
+
+    function updateFileName(input, spanId) {
+        const span = document.getElementById(spanId);
+        if (input.files.length > 0) {
+            span.textContent = 'Selected: ' + input.files[0].name;
+        }
+    }
+</script>
+{% endblock %}

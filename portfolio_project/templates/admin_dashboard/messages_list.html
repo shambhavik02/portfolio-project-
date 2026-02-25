@@ -1,0 +1,289 @@
+{% extends 'admin_dashboard/base_admin.html' %}
+
+{% block title %}Messages - Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .header {
+        margin-bottom: 2rem;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .header h1 i {
+        color: #667eea;
+    }
+
+    .filters {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .filter-btn {
+        padding: 0.5rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        background: white;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover {
+        border-color: #667eea;
+        color: #667eea;
+    }
+
+    .filter-btn.active {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-color: transparent;
+        color: white;
+    }
+
+    .messages-table-container {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow-x: auto;
+    }
+
+    .messages-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .messages-table th {
+        text-align: left;
+        padding: 1rem;
+        background: #f8f9fa;
+        color: #333;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .messages-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .messages-table tr {
+        transition: all 0.3s ease;
+    }
+
+    .messages-table tr:hover {
+        background: #f8f9fa;
+    }
+
+    .messages-table tr.unread {
+        background: #e0e7ff;
+        font-weight: 500;
+    }
+
+    .messages-table tr.unread:hover {
+        background: #d1d5fa;
+    }
+
+    .message-subject {
+        max-width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .badge-read {
+        background: #e0e7ff;
+        color: #667eea;
+    }
+
+    .badge-unread {
+        background: #fee2e2;
+        color: #ef4444;
+    }
+
+    .btn-view {
+        display: inline-block;
+        padding: 0.3rem 1rem;
+        background: #667eea;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-view:hover {
+        background: #764ba2;
+        transform: translateY(-2px);
+    }
+
+    .btn-delete {
+        display: inline-block;
+        padding: 0.3rem 1rem;
+        background: #fee2e2;
+        color: #ef4444;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-delete:hover {
+        background: #ef4444;
+        color: white;
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 4rem;
+    }
+
+    .empty-message i {
+        font-size: 4rem;
+        color: #667eea;
+        margin-bottom: 1rem;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+    }
+
+    .page-link {
+        padding: 0.5rem 1rem;
+        background: white;
+        color: #667eea;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        border: 2px solid #e5e7eb;
+    }
+
+    .page-link:hover {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+    }
+
+    .page-link.active {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border-color: transparent;
+    }
+
+    @media (max-width: 768px) {
+        .filters {
+            flex-wrap: wrap;
+        }
+
+        .messages-table td:nth-child(4),
+        .messages-table th:nth-child(4) {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1><i class="fas fa-envelope"></i> Messages</h1>
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterMessages('all')">All</button>
+        <button class="filter-btn" onclick="filterMessages('unread')">Unread</button>
+        <button class="filter-btn" onclick="filterMessages('read')">Read</button>
+    </div>
+</div>
+
+<div class="messages-table-container">
+    <table class="messages-table">
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in messages %}
+            <tr class="{% if not message.is_read %}unread{% endif %}">
+                <td>
+                    {% if message.is_read %}
+                    <span class="badge badge-read">Read</span>
+                    {% else %}
+                    <span class="badge badge-unread">Unread</span>
+                    {% endif %}
+                </td>
+                <td>{{ message.name }}</td>
+                <td>{{ message.email }}</td>
+                <td class="message-subject">{{ message.subject }}</td>
+                <td>{{ message.timestamp|date:"M d, Y" }}</td>
+                <td>
+                    <a href="{% url 'message_detail' message.id %}" class="btn-view">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                    <a href="{% url 'message_delete' message.id %}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this message?')">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">
+                    <div class="empty-message">
+                        <i class="fas fa-envelope-open"></i>
+                        <h2>No Messages Yet</h2>
+                        <p>When visitors send you messages, they'll appear here.</p>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function filterMessages(filter) {
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        // Filter messages
+        const rows = document.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            const isUnread = row.classList.contains('unread');
+            
+            if (filter === 'all') {
+                row.style.display = '';
+            } else if (filter === 'unread') {
+                row.style.display = isUnread ? '' : 'none';
+            } else if (filter === 'read') {
+                row.style.display = !isUnread ? '' : 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}
