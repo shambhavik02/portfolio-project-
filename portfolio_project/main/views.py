@@ -40,33 +40,41 @@ def about(request):
     return render(request, 'main/about.html', context)
 
 def projects(request):
+    profile = Profile.objects.first()
     projects = Project.objects.all()
     
     context = {
+        'profile':profile,
         'projects': projects,
     }
     return render(request, 'main/projects.html', context)
 
 def project_detail(request, slug):
+    profile = Profile.objects.first()
     project = get_object_or_404(Project, slug=slug)
     
     context = {
+        'profile': profile,
         'project': project,
     }
     return render(request, 'main/project_detail.html', context)
 
 def internships(request):
+    profile = Profile.objects.first()
     internships = Internship.objects.all()
     
     context = {
+        'profile' : profile,
         'internships': internships,
     }
     return render(request, 'main/internships.html', context)
 
 def certificates(request):
+    profile = Profile.objects.first()
     certificates = Certificate.objects.all()
     
     context = {
+        'profile' : profile,
         'certificates': certificates,
     }
     return render(request, 'main/certificates.html', context)

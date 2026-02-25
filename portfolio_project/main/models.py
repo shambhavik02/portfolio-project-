@@ -124,7 +124,7 @@ class Education(models.Model):
 class Project(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
-    short_description = models.CharField(max_length=200, help_text="Brief description for cards")
+    short_description = models.CharField(max_length=500, help_text="Brief description for cards")
     description = models.TextField()
     tech_stack = models.CharField(max_length=500, help_text="Comma separated technologies")
     github_link = models.URLField(blank=True)

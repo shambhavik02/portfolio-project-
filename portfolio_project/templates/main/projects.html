@@ -6,51 +6,124 @@
 {% block extra_css %}
 <style>
     .projects-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: linear-gradient(135deg, var(--dark-primary) 0%, var(--dark-secondary) 100%);
+        color: var(--dark-text);
         padding: 4rem 2rem;
         text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .light-theme .projects-header {
+        background: linear-gradient(135deg, var(--light-primary) 0%, var(--light-secondary) 100%);
+        color: var(--light-text);
+    }
+
+    .projects-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 30% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        pointer-events: none;
     }
 
     .projects-header h1 {
         font-size: 2.5rem;
         margin-bottom: 1rem;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
     }
 
     .projects-header p {
         font-size: 1.2rem;
-        opacity: 0.9;
+        color: var(--dark-text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .light-theme .projects-header p {
+        color: var(--light-text-secondary);
     }
 
     .projects-grid {
         max-width: 1200px;
-        margin: 0 auto;
-        padding: 4rem 2rem;
+        margin: 4rem auto;
+        padding: 0 2rem;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
         gap: 2rem;
     }
 
     .project-card {
-        background: white;
+        background: var(--dark-card);
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
+        box-shadow: var(--shadow-lg);
+        transition: var(--transition);
         text-decoration: none;
         color: inherit;
+        border: 1px solid rgba(59, 130, 246, 0.1);
         position: relative;
+    }
+
+    .light-theme .project-card {
+        background: var(--light-card);
+        border: 1px solid rgba(139, 92, 246, 0.1);
     }
 
     .project-card:hover {
         transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        border-color: rgba(59, 130, 246, 0.3);
+        box-shadow: 0 30px 40px rgba(59, 130, 246, 0.2);
+    }
+
+    .light-theme .project-card:hover {
+        border-color: rgba(139, 92, 246, 0.3);
+        box-shadow: 0 30px 40px rgba(139, 92, 246, 0.2);
+    }
+
+    .project-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--accent-gradient);
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .project-card:hover::before {
+        opacity: 0.3;
     }
 
     .project-image {
         height: 200px;
         overflow: hidden;
         position: relative;
+    }
+
+    .project-image::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50px;
+        background: linear-gradient(to top, var(--dark-card), transparent);
+    }
+
+    .light-theme .project-image::after {
+        background: linear-gradient(to top, var(--light-card), transparent);
     }
 
     .project-image img {
@@ -68,31 +141,49 @@
         position: absolute;
         top: 1rem;
         right: 1rem;
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        background: var(--accent-gradient);
         color: white;
         padding: 0.3rem 1rem;
         border-radius: 20px;
         font-size: 0.8rem;
         font-weight: 500;
         z-index: 1;
+        box-shadow: var(--shadow-md);
     }
 
     .project-content {
         padding: 1.5rem;
+        position: relative;
     }
 
     .project-title {
         font-size: 1.3rem;
-        color: #333;
+        color: var(--dark-text);
         margin-bottom: 0.5rem;
         font-weight: 600;
+        transition: var(--transition);
+    }
+
+    .light-theme .project-title {
+        color: var(--light-text);
+    }
+
+    .project-card:hover .project-title {
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     .project-description {
-        color: #666;
+        color: var(--dark-text-secondary);
         font-size: 0.95rem;
         margin-bottom: 1rem;
         line-height: 1.6;
+    }
+
+    .light-theme .project-description {
+        color: var(--light-text-secondary);
     }
 
     .project-tech {
@@ -103,31 +194,55 @@
     }
 
     .tech-tag {
-        background: #f0f0f0;
-        color: #667eea;
-        padding: 0.2rem 0.8rem;
-        border-radius: 15px;
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--accent-1);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
         font-size: 0.8rem;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        transition: var(--transition);
+    }
+
+    .light-theme .tech-tag {
+        background: rgba(139, 92, 246, 0.1);
+        color: var(--accent-2);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .tech-tag:hover {
+        background: var(--accent-gradient);
+        color: white;
+        border-color: transparent;
+        transform: scale(1.05);
     }
 
     .project-meta {
         display: flex;
         gap: 1rem;
         margin-bottom: 1rem;
-        color: #999;
+        color: var(--dark-text-secondary);
         font-size: 0.9rem;
+    }
+
+    .light-theme .project-meta {
+        color: var(--light-text-secondary);
     }
 
     .project-meta i {
         margin-right: 0.3rem;
-        color: #667eea;
+        color: var(--accent-2);
     }
 
     .project-links {
         display: flex;
         gap: 1rem;
-        border-top: 1px solid #eee;
+        border-top: 1px solid rgba(59, 130, 246, 0.1);
         padding-top: 1rem;
+        margin-top: 1rem;
+    }
+
+    .light-theme .project-links {
+        border-top: 1px solid rgba(139, 92, 246, 0.1);
     }
 
     .project-link {
@@ -136,45 +251,84 @@
         padding: 0.5rem;
         border-radius: 8px;
         text-decoration: none;
-        color: #333;
-        transition: all 0.3s ease;
+        color: var(--dark-text-secondary);
+        transition: var(--transition);
         font-size: 0.9rem;
+        background: rgba(59, 130, 246, 0.05);
+        border: 1px solid rgba(59, 130, 246, 0.1);
     }
 
-    .project-link.github:hover {
-        background: #333;
-        color: white;
+    .light-theme .project-link {
+        color: var(--light-text-secondary);
+        background: rgba(139, 92, 246, 0.05);
+        border: 1px solid rgba(139, 92, 246, 0.1);
     }
 
-    .project-link.demo:hover {
-        background: #667eea;
+    .project-link:hover {
+        background: var(--accent-gradient);
         color: white;
+        border-color: transparent;
+        transform: translateY(-2px);
     }
 
-    .project-link.details:hover {
-        background: #764ba2;
-        color: white;
+    .project-link i {
+        margin-right: 0.3rem;
     }
 
     .no-projects {
         text-align: center;
         padding: 4rem;
-        background: white;
+        background: var(--dark-card);
         border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(59, 130, 246, 0.1);
         grid-column: 1/-1;
+    }
+
+    .light-theme .no-projects {
+        background: var(--light-card);
+        border: 1px solid rgba(139, 92, 246, 0.1);
     }
 
     .no-projects i {
         font-size: 4rem;
-        color: #667eea;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin-bottom: 1rem;
+    }
+
+    .no-projects h2 {
+        color: var(--dark-text);
+        margin-bottom: 0.5rem;
+    }
+
+    .light-theme .no-projects h2 {
+        color: var(--light-text);
+    }
+
+    .no-projects p {
+        color: var(--dark-text-secondary);
+    }
+
+    .light-theme .no-projects p {
+        color: var(--light-text-secondary);
     }
 
     @media (max-width: 768px) {
         .projects-grid {
             grid-template-columns: 1fr;
             padding: 2rem 1rem;
+        }
+
+        .projects-header h1 {
+            font-size: 2rem;
+        }
+
+        .project-meta {
+            flex-direction: column;
+            gap: 0.3rem;
         }
     }
 </style>
@@ -217,15 +371,25 @@
             </div>
 
             <div class="project-links">
-                <a href="{{ project.github_link }}" target="_blank" class="project-link github"><i class="fab fa-github"></i> Code</a>
-                <a href="{{ project.live_demo_link }}" target="_blank" class="project-link demo"><i class="fas fa-external-link-alt"></i> Demo</a>
-                <a href="{% url 'project_detail' project.slug %}" class="project-link details"><i class="fas fa-info-circle"></i> Details</a>
+                {% if project.github_link %}
+                <a href="{{ project.github_link }}" target="_blank" class="project-link">
+                    <i class="fab fa-github"></i> Code
+                </a>
+                {% endif %}
+                {% if project.live_demo_link %}
+                <a href="{{ project.live_demo_link }}" target="_blank" class="project-link">
+                    <i class="fas fa-external-link-alt"></i> Demo
+                </a>
+                {% endif %}
+                <a href="{% url 'project_detail' project.slug %}" class="project-link">
+                    <i class="fas fa-info-circle"></i> Details
+                </a>
             </div>
         </div>
     </div>
     {% empty %}
     <div class="no-projects">
-        <i class="fas fa-folder-open"></i>
+        <i class="fas fa-code-branch"></i>
         <h2>No Projects Yet</h2>
         <p>Projects will be displayed here once added.</p>
     </div>
