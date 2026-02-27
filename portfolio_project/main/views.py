@@ -27,7 +27,6 @@ def about(request):
     profile = Profile.objects.first()
     educations = Education.objects.all()
     
-    # Calculate total experience years (example)
     total_projects = Project.objects.count()
     total_certificates = Certificate.objects.count()
     

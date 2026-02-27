@@ -95,17 +95,17 @@ class Certificate(models.Model):
 
 class Education(models.Model):
     DEGREE_CHOICES = [
-        ('high_school', 'High School'),
+        ('matriculate', 'Matriculate'),
+        ('intermediate', 'Intermediate'),
         ('bachelor', 'Bachelor\'s Degree'),
         ('master', 'Master\'s Degree'),
         ('phd', 'PhD'),
         ('diploma', 'Diploma'),
-        ('certificate', 'Certificate'),
     ]
     
     institution = models.CharField(max_length=200)
     degree = models.CharField(max_length=100, choices=DEGREE_CHOICES)
-    field_of_study = models.CharField(max_length=200)
+    field_of_study = models.CharField(max_length=200, blank = True, null = True)
     institution_logo = models.ImageField(upload_to='education/', blank=True, null=True)
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
@@ -115,7 +115,9 @@ class Education(models.Model):
     order = models.IntegerField(default=0)
     
     def __str__(self):
-        return f"{self.degree} in {self.field_of_study}"
+        if self.field_of_study:
+            return f"{self.degree} in {self.field_of_study}"
+        return self.get_degree_display()
     
     class Meta:
         ordering = ['-start_date']

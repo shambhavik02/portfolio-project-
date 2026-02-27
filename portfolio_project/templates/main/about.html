@@ -490,14 +490,14 @@
     <div class="bio-section">
         <div class="bio-image">
             {% if profile.about_image %}
-            <img src="{{ profile.about_image.url }}" alt="{{ profile.name }}">
+            <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}">
             {% else %}
             <img src="https://via.placeholder.com/400x500" alt="{{ profile.name }}">
             {% endif %}
-            <div class="experience-badge">
+            {% comment %} <div class="experience-badge">
                 <span class="number">5+</span>
                 <span class="text">Years Experience</span>
-            </div>
+            </div> {% endcomment %}
         </div>
         <div class="bio-content">
             <h2>Hi, I'm <span>{{ profile.name|default:"Your Name" }}</span></h2>
@@ -511,13 +511,13 @@
                     <div class="stat-label">Projects Completed</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">{{ total_certificates|default:"20" }}+</div>
+                    <div class="stat-number">{{ total_certificates|default:"2" }}+</div>
                     <div class="stat-label">Certifications</div>
                 </div>
-                <div class="stat-item">
+                {% comment %} <div class="stat-item">
                     <div class="stat-number">5+</div>
                     <div class="stat-label">Years Experience</div>
-                </div>
+                </div> {% endcomment %}
             </div>
         </div>
     </div>
@@ -536,12 +536,12 @@
                     <i class="fas fa-university"></i>
                 </div>
                 <div class="education-content">
-                    <h3>{{ edu.get_degree_display }} in {{ edu.field_of_study }}</h3>
+                    <h3>{{ edu.get_degree_display }}</h3>
                     <div class="institution">{{ edu.institution }}</div>
                     <div class="date">
                         <i class="far fa-calendar-alt"></i>
-                        {{ edu.start_date|date:"Y" }} - 
-                        {% if edu.current %}Present{% else %}{{ edu.end_date|date:"Y" }}{% endif %}
+                        {{ edu.start_date|date:"M Y" }} - 
+                        {% if edu.current %}Present{% else %}{{ edu.end_date|date:"M Y" }}{% endif %}
                     </div>
                     {% if edu.grade %}
                     <span class="grade"><i class="fas fa-star"></i> {{ edu.grade }}</span>

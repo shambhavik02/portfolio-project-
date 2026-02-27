@@ -682,7 +682,7 @@
 <section class="hero">
     <div class="hero-content">
         <div class="hero-text">
-            <span class="greeting">👋 Welcome, I'm</span>
+            <span class="greeting">Welcome, I'm</span>
             <h1>{{ profile.name|default:"Your Name" }}</h1>
             <div class="title">{{ profile.title|default:"Full Stack Developer" }}</div>
             <p class="bio">{{ profile.bio|default:"I create amazing web experiences that make a difference." }}</p>
@@ -766,7 +766,7 @@
                 <h3>{{ project.title }}</h3>
                 <p>{{ project.short_description }}</p>
                 <div class="project-tech">
-                    {% for tech in project.tech_stack.split|slice:":3" %}
+                    {% for tech in project.tech_stack.split|slice:":5" %}
                     <span>{{ tech }}</span>
                     {% endfor %}
                 </div>

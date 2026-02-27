@@ -240,18 +240,18 @@
                 <label for="degree">Degree *</label>
                 <select id="degree" name="degree" class="form-control" required>
                     <option value="">Select Degree</option>
-                    <option value="high_school" {% if education.degree == 'high_school' %}selected{% endif %}>High School</option>
+                    <option value="matriculate" {% if education.degree == 'matriculate' %}selected{% endif %}>Matriculate</option>
+                    <option value="intermediate" {% if education.degree == 'intermediate' %}selected{% endif %}>Intermediate</option>
                     <option value="bachelor" {% if education.degree == 'bachelor' %}selected{% endif %}>Bachelor's Degree</option>
                     <option value="master" {% if education.degree == 'master' %}selected{% endif %}>Master's Degree</option>
                     <option value="phd" {% if education.degree == 'phd' %}selected{% endif %}>PhD</option>
                     <option value="diploma" {% if education.degree == 'diploma' %}selected{% endif %}>Diploma</option>
-                    <option value="certificate" {% if education.degree == 'certificate' %}selected{% endif %}>Certificate</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="field_of_study">Field of Study *</label>
-                <input type="text" id="field_of_study" name="field_of_study" class="form-control" value="{{ education.field_of_study }}" required>
+                <input type="text" id="field_of_study" name="field_of_study" class="form-control" value="{{ education.field_of_study }}" >
             </div>
 
             <div class="form-group">
