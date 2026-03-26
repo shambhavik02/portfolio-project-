@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# Change into the Django project directory
+cd portfolio_project
+
 # Install dependencies if not handled by Vercel automatically (optional)
-# pip install -r requirements.txt
+# pip install -r ../requirements.txt
 
 # Create migrations (if local ones are missing)
 python manage.py makemigrations --noinput
