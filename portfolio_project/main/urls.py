@@ -11,6 +11,7 @@ urlpatterns = [
     path('internships/', views.internships, name='internships'),
     path('certificates/', views.certificates, name='certificates'),
     path('contact/', views.contact, name='contact'),
+    path('download-cv/', views.download_cv, name='download_cv'),
     
     # Authentication
     path('login/', auth_views.LoginView.as_view(template_name='admin_dashboard/login.html'), name='login'),

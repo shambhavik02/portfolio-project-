@@ -8,7 +8,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(TechnicalSkill)
 class TechnicalSkillAdmin(admin.ModelAdmin):
-    list_display = ['name', 'proficiency', 'category', 'order']
+    list_display = ['name', 'proficiency', 'icon', 'category', 'order']
     list_editable = ['proficiency', 'order']
     list_filter = ['category']
     search_fields = ['name']
@@ -45,9 +45,21 @@ class ProjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     readonly_fields = ['created_date', 'updated_date']
 
+@admin.register(About)
+class AboutAdmin(admin.ModelAdmin):
+    list_display = ['id', 'description']
+
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ['name', 'email', 'subject', 'timestamp', 'is_read']
     list_filter = ['is_read', 'timestamp']
     search_fields = ['name', 'email', 'subject']
-    readonly_fields = ['timestamp']
+@admin.register(Achievement)
+class AchievementAdmin(admin.ModelAdmin):
+    list_display = ['title', 'date', 'order']
+    list_editable = ['order']
+@admin.register(Training)
+class TrainingAdmin(admin.ModelAdmin):
+    list_display = ['title', 'organization', 'start_date', 'current', 'image', 'order']
+    list_editable = ['order']
+    search_fields = ['title', 'organization', 'description']

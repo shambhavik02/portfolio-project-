@@ -506,45 +506,222 @@
         {% endif %}
         {% endif %}
     </div>
+<style>
+    .contact-container {
+        max-width: 900px;
+        margin: 4rem auto;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 4rem;
+    }
 
-    <!-- Contact Form -->
-    <div class="contact-form">
-        <h2><i class="fas fa-paper-plane"></i> Send Message</h2>
+    .contact-info h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        margin-bottom: 1.5rem;
+        color: var(--text-main);
+    }
+
+    .contact-info p {
+        color: var(--text-subtle);
+        font-size: 1.125rem;
+        margin-bottom: 3rem;
+    }
+
+    .contact-details {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .contact-detail-item {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+    }
+
+    .contact-detail-item .icon {
+        width: 48px;
+        height: 48px;
+        background: var(--bg-subtle);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 1.25rem;
+        transition: var(--transition);
+    }
+
+    .contact-detail-item:hover .icon {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .contact-detail-text h4 {
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin-bottom: 0.25rem;
+    }
+
+    .contact-detail-text p {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-main);
+        margin-bottom: 0;
+    }
+
+    /* Form Styling */
+    .contact-form-wrapper {
+        background: white;
+        padding: 3rem;
+        border-radius: 16px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-md);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-main);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-family: inherit;
+        font-size: 1rem;
+        background: var(--bg-subtle);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        transition: var(--transition);
+        color: var(--text-main);
+    }
+
+    .form-control:focus {
+        outline: none;
+        background: white;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-control::placeholder {
+        color: var(--text-muted);
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 0.875rem 1.75rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        text-decoration: none;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        background: var(--primary);
+        color: white;
+        border: 1px solid var(--primary);
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .btn-submit:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+
+    @media (max-width: 768px) {
+        .contact-container {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            margin: 2rem auto;
+        }
+
+        .contact-form-wrapper {
+            padding: 2rem 1.5rem;
+        }
+    }
+</style>
+
+<div class="contact-container">
+    <div class="contact-info">
+        <h2>Get in touch</h2>
+        <p>I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.</p>
         
-        <form method="post">
+        <div class="contact-details">
+            <div class="contact-detail-item">
+                <div class="icon"><i class="fas fa-envelope"></i></div>
+                <div class="contact-detail-text">
+                    <h4>Email</h4>
+                    <p>{{ profile.email|default:"hello@example.com" }}</p>
+                </div>
+            </div>
+            {% if profile.linkedin %}
+            <div class="contact-detail-item">
+                <div class="icon"><i class="fab fa-linkedin"></i></div>
+                <div class="contact-detail-text">
+                    <h4>LinkedIn</h4>
+                    <p>{{ profile.name }}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="contact-detail-item">
+                <div class="icon"><i class="fas fa-location-dot"></i></div>
+                <div class="contact-detail-text">
+                    <h4>Location</h4>
+                    <p>India (Remote Friendly)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-form-wrapper">
+        <form method="POST">
             {% csrf_token %}
-            
             <div class="form-group">
-                <label for="name">Name *</label>
-                <input type="text" id="name" name="name" class="form-control" required>
+                <label for="name">Your Name</label>
+                <input type="text" name="name" id="name" class="form-control" placeholder="John Doe" required>
             </div>
-
             <div class="form-group">
-                <label for="email">Email *</label>
-                <input type="email" id="email" name="email" class="form-control" required>
+                <label for="email">Email Address</label>
+                <input type="email" name="email" id="email" class="form-control" placeholder="john@example.com" required>
             </div>
-
             <div class="form-group">
-                <label for="subject">Subject *</label>
-                <input type="text" id="subject" name="subject" class="form-control" required>
+                <label for="subject">Subject</label>
+                <input type="text" name="subject" id="subject" class="form-control" placeholder="Let's work together" required>
             </div>
-
             <div class="form-group">
-                <label for="message">Message *</label>
-                <textarea id="message" name="message" class="form-control" required></textarea>
+                <label for="message">Message</label>
+                <textarea name="message" id="message" class="form-control" placeholder="How can I help you?" required></textarea>
             </div>
-
-            <button type="submit" class="submit-btn">
-                <i class="fas fa-paper-plane"></i> Send Message
+            <button type="submit" class="btn-submit">
+                Send Message <i class="fas fa-paper-plane" style="margin-left: 0.5rem;"></i>
             </button>
         </form>
     </div>
-
-    <!-- Social Links -->
-    <div class="social-section">
-        <h2>Connect With Me</h2>
-        <div class="social-links-large">
-            {% if profile.github %}
             <a href="{{ profile.github }}" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
             {% endif %}
             {% if profile.linkedin %}

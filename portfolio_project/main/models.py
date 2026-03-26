@@ -33,6 +33,16 @@ class Profile(models.Model):
     class Meta:
         verbose_name_plural = "Profile"
 
+class About(models.Model):
+    description = models.TextField()
+    experience_summary = models.TextField(blank=True)
+    
+    def __str__(self):
+        return "About Me Section"
+    
+    class Meta:
+        verbose_name_plural = "About Me"
+
 class TechnicalSkill(models.Model):
     name = models.CharField(max_length=100)
     proficiency = models.IntegerField(blank=True, help_text="Proficiency percentage (1-100),")
@@ -166,5 +176,33 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"{self.name} - {self.subject}"
     
+class Achievement(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    icon = models.CharField(max_length=50, default='fas fa-trophy', help_text="Font Awesome icon class")
+    order = models.IntegerField(default=0)
+    date = models.DateField(null=True, blank=True)
+    
+    def __str__(self):
+        return self.title
+    
     class Meta:
-        ordering = ['-timestamp']
+        ordering = ['order', '-date']
+
+class Training(models.Model):
+    title = models.CharField(max_length=200)
+    organization = models.CharField(max_length=200)
+    start_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
+    current = models.BooleanField(default=False)
+    description = models.TextField()
+    technologies = models.CharField(max_length=500, blank=True, help_text="Comma separated technologies")
+    image = models.ImageField(upload_to='training/', null=True, blank=True)
+    order = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        ordering = ['order', '-start_date']
+        verbose_name_plural = "Training"

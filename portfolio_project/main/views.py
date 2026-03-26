@@ -3,23 +3,45 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
+from django.http import FileResponse
 from .models import *
 from .forms import ContactForm
 
 # Public Views
 def home(request):
     profile = Profile.objects.first()
+    about = About.objects.first()
     technical_skills = TechnicalSkill.objects.all()
     soft_skills = SoftSkill.objects.all()
-    featured_projects = Project.objects.filter(featured=True)[:3]
-    internships = Internship.objects.all()[:3]
+    featured_projects = Project.objects.filter(featured=True)
+    all_projects = Project.objects.all()
+    
+    # Extract unique tech stack tags
+    tech_tags = set()
+    for project in all_projects:
+        if project.tech_stack:
+            tags = [t.strip() for t in project.tech_stack.split(',')]
+            tech_tags.update(tags)
+    tech_tags = sorted(list(tech_tags))
+    
+    internships = Internship.objects.all()
+    educations = Education.objects.all()
+    certificates = Certificate.objects.all()
+    achievements = Achievement.objects.all()
+    trainings = Training.objects.all()
     
     context = {
         'profile': profile,
+        'about': about,
         'technical_skills': technical_skills,
         'soft_skills': soft_skills,
         'featured_projects': featured_projects,
+        'all_projects': all_projects,
         'internships': internships,
+        'educations': educations,
+        'certificates': certificates,
+        'achievements': achievements,
+        'trainings': trainings,
     }
     return render(request, 'main/home.html', context)
 
@@ -131,13 +153,20 @@ def contact(request):
             pass  # Email sending failed, but that's okay
         
         messages.success(request, 'Message sent successfully!')
-        return redirect('contact')
+        return redirect('/#contact')
     
+    return redirect('/#contact')
+    
+def download_cv(request):
+    """
+    Serves the resume file for download.
+    """
     profile = Profile.objects.first()
-    context = {
-        'profile': profile,
-    }
-    return render(request, 'main/contact.html', context)
+    if profile and profile.resume_file:
+        response = FileResponse(profile.resume_file.open(), as_attachment=True)
+        return response
+    messages.error(request, "Resume file not found.")
+    return redirect('home')
 
 # Admin Dashboard Views
 @login_required

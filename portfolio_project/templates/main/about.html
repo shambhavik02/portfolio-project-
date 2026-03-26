@@ -532,12 +532,17 @@
         <div class="education-grid">
             {% for edu in educations %}
             <div class="education-card">
-                <div class="education-icon">
+                <div class="education-icon overflow-hidden">
+                    {% if edu.institution_logo %}
+                    <img src="{{ edu.institution_logo.url }}" alt="{{ edu.institution }}" class="w-full h-full object-cover">
+                    {% else %}
                     <i class="fas fa-university"></i>
+                    {% endif %}
                 </div>
                 <div class="education-content">
                     <h3>{{ edu.get_degree_display }}</h3>
                     <div class="institution">{{ edu.institution }}</div>
+
                     <div class="date">
                         <i class="far fa-calendar-alt"></i>
                         {{ edu.start_date|date:"M Y" }} - 
