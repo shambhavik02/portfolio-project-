@@ -2,9 +2,7 @@
   "version": 2,
   "functions": {
     "portfolio_project/portfolio_project/wsgi.py": {
-      "runtime": "@vercel/python",
-      "memory": 1024,
-      "maxDuration": 10
+      "runtime": "python3.12"
     }
   },
   "routes": [
